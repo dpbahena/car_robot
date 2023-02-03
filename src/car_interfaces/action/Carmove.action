@@ -1,0 +1,9 @@
+#distance goal
+float32 distance
+geometry_msgs/Twist twist
+---
+#distance reached
+float32 distance
+---
+#distance feedback
+float32 updated_distance
