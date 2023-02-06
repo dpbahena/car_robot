@@ -2,6 +2,6 @@
 /install
 /log
 .vscode
-src/car_motor_control/libraries
+# src/car_motor_control/libraries
 
 
