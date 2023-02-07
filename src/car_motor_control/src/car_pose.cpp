@@ -41,7 +41,7 @@ int main(int argc, char **argv){
     return 0;
 }
 
-CarPose::CarPose(): Node("carpose"){
+CarPose::CarPose(): Node("carpose_node"){
     // init subscribers
     encoder_sub_  = this->create_subscription<car_interfaces::msg::Encoder>("encoder", 10, std::bind(&CarPose::encoder_callback, this, _1));
     

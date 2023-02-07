@@ -44,7 +44,7 @@ public:
         velocity_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmds", 1);
 
         /* Init subscriber to Pose topic */
-        pose_sub_ = this->create_subscription<std_msgs::msg::Float32>("udpated_distance", 1, std::bind(&CarActionServer::distance_callback, this, _1));
+        pose_sub_ = this->create_subscription<std_msgs::msg::Float32>("distance", 1, std::bind(&CarActionServer::distance_callback, this, _1));
 
         /* Init client-server services */
         encoder_client_ = this->create_client<std_srvs::srv::SetBool>("reset_encoder");
@@ -147,6 +147,19 @@ private:
             goal_handle->publish_feedback(feedback);  // publish the range which is defined as the so far distance range
             loop_rate.sleep();
         }
+        /* Check if goal is done */
+        if(rclcpp::ok()){
+            result->distance = latest;
+            velocity.linear.x = 0;
+            velocity.linear.y = 0;
+            velocity.angular.z = 0;
+            velocity_pub_->publish(velocity);
+            goal_handle->succeed(result);
+            RCLCPP_INFO(this->get_logger(),"Goal Succeeded");
+        }
+        /* reset encoder regardeless of action was achieved or not! */
+        queue_async_request(); 
+
 
     }
 

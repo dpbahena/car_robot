@@ -8,7 +8,7 @@
 *   ros2 run car_control motorcontroller  
     or use the launch file below: 
     ros2 launch car_control robot.launch.py 
-*   ros2 topic pub --once relative_speeds std_msgs/msg/Float32MultiArray "{data: { 0.58,-0.58, 0.0}}"   // to start motors
+*   ros2 topic pub --once relative_speeds std_msgs/msg/Float32MultiArray "{data: { 0.58,-0.58, 0.0, 255}}"   // to start motors ONCE at 255 value speed (max)
 *   
 *            
 *    LINEAR:   MAX 2.0  results in 255 actual pwm in motors

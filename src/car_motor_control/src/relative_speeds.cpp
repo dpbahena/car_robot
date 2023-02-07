@@ -181,6 +181,9 @@ void RelativeSpeeds::relative_speeds_callback(){
         relative_speeds_pub_->publish(motorspeeds);
 }
 
+/* Set limits for actual velocity multiplier - higher values result in values over 255 
+* - lower values result in motors not responding due to low voltage 
+*/
 float RelativeSpeeds::mapVelocity(float v){
     if(isLinear){
         isLinear = false;
