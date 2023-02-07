@@ -143,7 +143,8 @@ void MotorController::start_motors(){
     	motor3->setSpeed(c2);
     }
 
-    RCLCPP_INFO(this->get_logger(),"%d, %d, %d, %d, %d, %d", a1, a2, b1, b2, c1, c2);
+    if((a1 || a2) || (b1 || b2) || (c1 || c2))
+        RCLCPP_INFO(this->get_logger(),"%d, %d, %d, %d, %d, %d", a1, a2, b1, b2, c1, c2);
 
     /* start timer and motors */
     start = this->get_clock()->now().seconds();
