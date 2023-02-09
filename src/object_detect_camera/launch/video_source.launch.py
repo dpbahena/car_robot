@@ -9,7 +9,7 @@ def generate_launch_description():
     
     # args that can be set from the command line or a default will be used
     input_arg = DeclareLaunchArgument(
-        "input", default_value=TextSubstitution(text="/dev/video0")
+        "input", default_value=TextSubstitution(text="/dev/video4")
     )
     input_width_arg = DeclareLaunchArgument(
         "input_width", default_value=TextSubstitution(text="0")

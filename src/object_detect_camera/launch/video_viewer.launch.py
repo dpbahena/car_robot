@@ -9,6 +9,17 @@ from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import TextSubstitution
+#    -  usage :
+#
+#   ros2 launch object_detect_camera video_viewer.launch.py input:=/dev/video4 output:=rtp://192.168.0.247:8080  input_latency:=1000
+#
+#   or use the defaults  and run only: (see video_output.launch.py and video_source.launch.py for defaults)
+#
+#   ros2 launch object_detect_camera video_viewer.launch.py
+#
+#    use the following in the client machine (big computer)
+#    gst-launch-1.0 -v udpsrc port=8080  caps = "application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)VP9, payload=(int)96" ! rtpbin ! rtpvp9depay ! decodebin ! queue ! autovideoconvert !  videorate ! xvimagesink sync=false
+#
 
 
 def generate_launch_description():
@@ -19,7 +30,7 @@ def generate_launch_description():
     launch_video_source = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('machine_learning_pkg'),
+                get_package_share_directory('object_detect_camera'),
                 'launch/video_source.launch.py'
             )
         )
@@ -38,7 +49,7 @@ def generate_launch_description():
     launch_video_output = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('machine_learning_pkg'),
+                get_package_share_directory('object_detect_camera'),
                 'launch/video_output.launch.py'
             )
             

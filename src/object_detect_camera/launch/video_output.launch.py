@@ -10,12 +10,14 @@ def generate_launch_description():
     # args that can be set from the command line or a default will be used
     output_arg = DeclareLaunchArgument(
         #"output", default_value=TextSubstitution(text="display://0")
+        #"output", default_value=TextSubstitution(text="display://10.0")
         "output", default_value=TextSubstitution(text="rtp://192.168.0.247:8080")
 
     )
     output_codec_arg = DeclareLaunchArgument(
         #"output_codec", default_value=TextSubstitution(text="unknown")
         "output_codec", default_value=TextSubstitution(text="vp9")
+        #"output_codec", default_value=TextSubstitution(text="h264")
     )
     output_bitrate_arg = DeclareLaunchArgument(
         "output_bitrate", default_value=TextSubstitution(text="0")
