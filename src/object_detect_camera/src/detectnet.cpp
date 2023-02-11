@@ -248,7 +248,8 @@ void DetectObjNet::init_parameters(){
 
     // retrive parameters
 
-    std::string model_name = "ssd-mobilenet-v2";
+    //std::string model_name = "ssd-mobilenet-v2";
+    std::string model_name_str;
     std::string model_path;
     std::string prototxt_path;
     std::string class_labels_path;
@@ -267,7 +268,7 @@ void DetectObjNet::init_parameters(){
     float threshold = DETECTNET_DEFAULT_CONFIDENCE_THRESHOLD;
     
     
-    this->declare_parameter("model_name", model_name);
+    this->declare_parameter("model_name", model_name_str);
     this->declare_parameter("model_path", model_path);
     this->declare_parameter("prototxt_path", prototxt_path);
     this->declare_parameter("class_labels_path", class_labels_path);
@@ -280,7 +281,7 @@ void DetectObjNet::init_parameters(){
 
     // retrieve parameters
 
-    this->get_parameter("model_name", model_name);
+    this->get_parameter("model_name", model_name_str);
     this->get_parameter("model_path", model_path);
     this->get_parameter("prototxt_path", prototxt_path);
     this->get_parameter("class_labels_path", class_labels_path);
@@ -302,9 +303,9 @@ void DetectObjNet::init_parameters(){
     }else{
         // determine which built-in model was requested
 
-        detectNet::NetworkType model = detectNet::NetworkTypeFromStr(model_name.c_str());
+        detectNet::NetworkType model = detectNet::NetworkTypeFromStr(model_name_str.c_str());
         if( model == detectNet::CUSTOM){
-            ROS_ERROR("invalid built-in pretrained model name '%s', defaulting to pednet", model_name.c_str());
+            ROS_ERROR("invalid built-in pretrained model name '%s', defaulting to pednet", model_name_str.c_str());
             model = detectNet::SSD_MOBILENET_V2;
         }
 

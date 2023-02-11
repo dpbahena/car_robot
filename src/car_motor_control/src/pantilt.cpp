@@ -4,8 +4,9 @@
 
 
 /*
+*   testing : 
 *
-*  ros2 topic pub  --once /pantilt_move car_interfaces/msg/Pantilt "{x: 20, y: 80}"
+*  ros2 topic pub  --once /pantilt_cmds car_interfaces/msg/Pantilt "{x: 20, y: 80}"
 *
 */
 
@@ -25,10 +26,10 @@ private:
     rclcpp::TimerBase::SharedPtr timer_;
     
     /* max and min travel in degrees : pan-tilt values */
-    const int tilt_max = 135;
-    const int tilt_min = 0;
-    const int pan_max = 177;
-    const int pan_min = 0;
+    const int tilt_max = 110; //135;
+    const int tilt_min = 10;
+    const int pan_max = 145;
+    const int pan_min = 30;
 
     float pose_x{}, pose_y{};  // holds pantilt pose
     int degrees;

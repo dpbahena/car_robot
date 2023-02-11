@@ -11,6 +11,12 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch.substitutions import TextSubstitution
 
+#
+#launch - example:
+#
+#  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2
+#
+
 def generate_launch_description():
     ld = LaunchDescription()
     
@@ -75,18 +81,18 @@ def generate_launch_description():
         remappings=[
            ('image_in', 'raw' )
         ],
-        parameters=[
-            {"model_name": LaunchConfiguration('model_name')},# LaunchConfiguration('model_name')},
-            {"model_path": ""},
-            {"prototxt_path": ""},
-            {"class_labels_path": ""},
-            {"input_blob": ""},
-            {"output_cvg": ""},
-            {"output_bbox": ""}, #LaunchConfiguration('output_bbox')},
-            {"overlay_flags": LaunchConfiguration('overlay_flags')},
-            {"mean_pixel_value": LaunchConfiguration('mean_pixel_value')},
-            {"threshold": LaunchConfiguration('threshold')}
-        ]
+        parameters=[{
+            "model_name": LaunchConfiguration("model_name"),# LaunchConfiguration('model_name')},
+            "model_path": "",
+            "prototxt_path": "",
+            "class_labels_path": "",
+            "input_blob": "",
+            "output_cvg": "",
+            "output_bbox": "", #LaunchConfiguration('output_bbox')},
+            "overlay_flags": LaunchConfiguration('overlay_flags'),
+            "mean_pixel_value": LaunchConfiguration('mean_pixel_value'),
+            "threshold": LaunchConfiguration('threshold')
+        }]
         
     )
   

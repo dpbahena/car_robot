@@ -27,7 +27,7 @@ def generate_launch_description():
     )
 
     video_output = Node(
-        package='object_detect_camera',
+        package='object_detect_camera',           
         executable='video_output',
         output='screen',
         remappings=[
