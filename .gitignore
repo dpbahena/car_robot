@@ -2,6 +2,8 @@
 /install
 /log
 .vscode
+/networks
 src/car_motor_control/src/action_client.cpp
+
 
 
