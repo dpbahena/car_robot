@@ -230,7 +230,7 @@ void TrackingImages::detect_callback(const vision_msgs::msg::Detection2DArray::C
         
         //ROS_INFO("id is %i and score is %f ", id, confidence);
 
-        if (id == BOTTLE && confidence > .85){
+        if (id == BOTTLE && confidence > .80){
             // get the center of the target 
 
             // FOR FOXY DISTRO:
@@ -337,7 +337,7 @@ void TrackingImages::detection_status_callback(const std_msgs::msg::Bool::ConstS
     //std::cout << " I am checking if I detect something ..." << std::endl;
     geometry_msgs::msg::Twist move_msg;
     car_interfaces::msg::Pantilt pantilt_msg;
-    return;
+    
     if(!is_object_detected){
          // go to scan mode
         std::cout << "SCANNING THE AREA" << std::endl;
