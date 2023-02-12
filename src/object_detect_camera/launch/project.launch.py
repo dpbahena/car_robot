@@ -14,6 +14,8 @@ from launch.substitutions import TextSubstitution
 #
 #    ros2 launch machine_learning_pkg tracking.launch.py input:=/dev/video2 model_name:=ssd-mobilenet-v2 maxtime:=1
 #
+#    ros2 launch object_detect_camera project.launch.py model_name:=coco-bottle maxtime:=1 threshold:=.6
+#
 ############################33
 
 def generate_launch_description():
@@ -47,7 +49,7 @@ def generate_launch_description():
     launch_tracking_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('tracking'),
+                get_package_share_directory('object_detect_camera'),
                 'launch/tracking.launch.py'
             )
             
@@ -55,21 +57,11 @@ def generate_launch_description():
         
     )
    
-     # ! ------Launch pantilt.launch.py------for tracking images----->
-    launch_pantilt_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                get_package_share_directory('tilt_control'),
-                'launch/pantilt.launch.py'
-            )
-            
-        )
-        
-    )
+   
     ld.add_action(launch_detectnet)
     ld.add_action(launch_robot)
-    ld.add_action(launch_tracking_node)
-    ld.add_action(launch_pantilt_node)
+    #ld.add_action(launch_tracking_node)
+    
     
    
     

@@ -63,11 +63,22 @@ def generate_launch_description():
         )
     )
 
+    # ! ------------ PanTilt  ---------------->
+    launch_pantilt = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory('car_motor_control'),
+                'launch/pantilt.launch.py'
+            )
+        )
+    )
+
     ld.add_action(launch_motor_controller) 
     ld.add_action(launch_relative_speeds)
     ld.add_action(launch_wheel_encoder) 
     ld.add_action(launch_car_pose)
     ld.add_action(launch_action_srv)
+    ld.add_action(launch_pantilt)
    
    
     return ld

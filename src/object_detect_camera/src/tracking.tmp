@@ -1,0 +1,232 @@
+#include "ros2_definitions.h"
+#include "utils/pid.h"
+#include "image_converter.h"
+#include "geometry_msgs/msg/twist.hpp"
+
+
+
+
+using std::placeholders::_1;
+using namespace std::chrono_literals;
+
+/*
+*-------------------running the node only ---------------------------------
+* 
+* 
+* ros2 run machine_learning_pkg test_subscriber --ros-args -p kp:=0.003 -p kd:=-0.001 -p ki:=-0.0035 
+*  changing kp=-.001 follows you but slow to respond...so this is the best tunning
+* ros2 run machine_learning_pkg test_subscriber --ros-args -p kp:=0.003 -p kd:=-0.0005 -p ki:=-0.0053
+*/
+
+
+class TrackingImages : public rclcpp::Node{
+
+public:
+    TrackingImages();
+   
+
+
+private:
+    //imageConverter* input_cvt = NULL;
+    rclcpp::TimerBase::SharedPtr parameter_timer_;
+    rclcpp::Subscription<vision_msgs::msg::Detection2DArray>::SharedPtr detect_sub_;
+    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr detection_status_sub_;
+    int32_t image_width;
+    int32_t image_height;
+    int tolerance;
+    bool is_object_detected;
+    float kp, kd, ki;
+    
+    rclcpp::Subscription<vision_msgs::msg::VisionInfo>::SharedPtr info_sub_;
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr image_sub_;
+
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr move_pub_;
+    rclcpp::Publisher<car_interfaces::msg::Pantilt>::SharedPtr pantilt_move_pub_;
+
+
+    void init_subscribers();
+
+    void info_callback(const vision_msgs::msg::VisionInfo::ConstSharedPtr msg);
+    void detect_callback(const vision_msgs::msg::Detection2DArray::ConstSharedPtr msg);
+    void image_callback(const sensor_msgs::msg::Image::ConstSharedPtr msg);
+    void detection_status_callback(const std_msgs::msg::Bool::ConstSharedPtr msg);
+    void parameter_callback();
+
+    void init_publishers();
+
+
+};
+
+int main(int argc, char **argv){
+    rclcpp::init(argc, argv);
+    __node_name_ = "tracking_node";
+    rclcpp::spin(std::make_shared<TrackingImages>());
+    rclcpp::shutdown();
+
+    return 0;
+}
+
+void TrackingImages::parameter_callback(){
+    this->get_parameter("tolerance", tolerance);
+    this->get_parameter("kp", kp);
+    this->get_parameter("kd", kd);
+    this->get_parameter("ki", ki);
+}
+
+TrackingImages::TrackingImages():Node(__node_name_){
+    init_subscribers();
+    init_publishers();
+
+    this->declare_parameter("tolerance", 6);  // amount of the tracking object offcenter
+    this->declare_parameter("kp", 0.112);
+    this->declare_parameter("kd", -0.00925);
+    this->declare_parameter("ki", -0.0011);
+
+    // retrieve parameter every second if any
+    parameter_timer_ = this->create_wall_timer(1000ms, std::bind(&TrackingImages::parameter_callback, this));
+    
+
+}
+
+void TrackingImages::init_subscribers(){
+    detect_sub_ = this->create_subscription<vision_msgs::msg::Detection2DArray>("detections", 25, std::bind(&TrackingImages::detect_callback, this, _1));
+    info_sub_ = this->create_subscription<vision_msgs::msg::VisionInfo>("vision_info", 4, std::bind(&TrackingImages::info_callback, this, _1) );
+    image_sub_ = this->create_subscription<sensor_msgs::msg::Image>("raw", 10, std::bind(&TrackingImages::image_callback, this, _1));
+    detection_status_sub_ = this->create_subscription<std_msgs::msg::Bool>("detection_status",1,std::bind(&TrackingImages::detection_status_callback, this, _1));
+}
+
+void TrackingImages::init_publishers(){
+    //move_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmds", 10);
+    move_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmds", 10);
+}
+void TrackingImages::detect_callback(const vision_msgs::msg::Detection2DArray::ConstSharedPtr msg){
+    
+    int nd = msg->detections.size();
+    int32_t PERSON = 1; 
+    int32_t BOTTLE = 0;
+    //geometry_msgs::msg::Twist move_msg;
+    geometry_msgs::msg::Twist move_msg;
+
+   
+    
+    ROS_INFO("the size of the detection list is %i", nd );
+    
+    // set up PID control variables
+    PIDController pid;
+    pid.Kp = kp;
+    pid.Ki = ki;
+    pid.Kd = kd;
+    pid.limMin = -3.0;
+    pid.limMax = 3.0;
+    pid.limMinInt = -2.5;
+    pid.limMaxInt = 2.5;
+    pid.T = 0.0;
+    float prevT = 0.0;
+
+    PIDController_Init(&pid);
+    
+
+    for (int n = 0; n < nd; n++ ){
+                        
+        
+        // FOXY distro:
+        /* int id = msg->detections.at(n).results.at(0).id[0]; */
+        
+        // HUMBLE distro:
+        int id = msg->detections.at(n).id[0];
+
+        // FOXY distro:
+        /* float confidence = msg->detections.at(n).results.at(0).score; */
+        
+        // HUMBLE distro:
+        float confidence = msg->detections.at(n).results.at(0).hypothesis.score;
+
+        
+        //ROS_INFO("id is %i and score is %f ", id, confidence);
+
+        if (id == BOTTLE && confidence > .6){
+            // get the center of the target 
+            // FOR FOXY DISTRO:
+            /* float x = msg->detections.at(0).bbox.center.x;
+               float y = msg->detections.at(0).bbox.center.y;  */
+
+            // For HUMBLE distro :
+            float x = msg->detections.at(0).bbox.center.position.x;
+            float y = msg->detections.at(0).bbox.center.position.y;
+
+            std::cout << "center : " << x << " image center is: " << image_width/2 << std::endl;
+          
+            // set target position
+            float target = 0;   // means camera is centered at the tracking object
+            // PID constants
+            
+            float currT = this->get_clock()->now().seconds();
+            float deltaT = (currT - prevT)/1000000000L;    // to seconds
+            pid.T = deltaT;
+            std::cout << "DELTAt = " << deltaT << std::endl;
+            prevT = currT;
+           
+            float measurement = x - image_width/2;
+            std::cout << "Error = " << measurement << std::endl;
+            /* Compute control signal */
+
+            PIDController_Update(&pid, target, measurement);
+            
+            std::cout << "Output is " << pid.out << std::endl;
+
+            
+            // if (pid.out > -0.1 && pid.out < 0.1){
+            if(pid.out > -0.1 && pid.out < 0.1){
+                // move forward
+                move_msg.linear.x = 0.23;
+                
+            }
+            move_msg.angular.z = pid.out;
+            move_pub_->publish(move_msg); 
+             
+            
+        }else{
+        
+            move_msg.linear.x = 0;
+            move_msg.angular.z = 0;
+            move_pub_->publish(move_msg);
+        }
+
+        
+    }
+}
+
+void TrackingImages::info_callback(const vision_msgs::msg::VisionInfo::ConstSharedPtr msg){
+    std::string location = msg->database_location;
+    int32_t version = msg->database_version;
+    std::string method = msg->method;
+    ROS_INFO("location %s, version: %i, method: %s", location.c_str(), version, method.c_str());
+
+}
+
+void TrackingImages::image_callback(const sensor_msgs::msg::Image::ConstSharedPtr msg){
+    image_height = msg->height;
+    image_width = msg->width;
+}
+
+
+float TestSystem_Update(float input){
+    static float output = 0.0f;
+    static const float alpha = 0.02f;
+
+    return output;
+}
+
+void TrackingImages::detection_status_callback(const std_msgs::msg::Bool::ConstSharedPtr msg){
+    is_object_detected = msg->data;
+    //std::cout << " I am checking if I detect something ..." << std::endl;
+    geometry_msgs::msg::Twist move_msg;
+    if(!is_object_detected){
+         // go to scan mode
+        std::cout << "SCANNING THE AREA" << std::endl;
+        move_msg.angular.z=.4;
+        move_pub_->publish(move_msg);
+    }
+    //move_msg.angular.z = 0;  // reset after scanning
+    
+}

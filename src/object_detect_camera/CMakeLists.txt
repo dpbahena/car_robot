@@ -5,6 +5,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(car_interfaces /home/ros2data/car_robot/install)
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(jetson-utils REQUIRED)
@@ -15,6 +16,7 @@ find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(vision_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(car_interfaces REQUIRED PATHS ${car_interfaces})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -51,6 +53,8 @@ add_executable(imagenet src/imagenet.cpp ${common_src})
 target_link_libraries(imagenet ${catkin_LIBRARIES} jetson-inference)
 add_executable(detectnet src/detectnet.cpp ${common_src})
 target_link_libraries(detectnet ${catkin_LIBRARIES} jetson-inference)
+add_executable(tracking src/tracking.cpp src/utils/pid.cpp ${common_src})
+target_link_libraries(tracking ${catkin_LIBRARIES} jetson-inference)
 
 
 ament_target_dependencies(
@@ -63,6 +67,7 @@ ament_target_dependencies(
 ament_target_dependencies(video_output rclcpp std_msgs sensor_msgs vision_msgs)
 ament_target_dependencies(imagenet rclcpp std_msgs sensor_msgs vision_msgs)
 ament_target_dependencies(detectnet rclcpp std_msgs sensor_msgs vision_msgs)
+ament_target_dependencies(tracking rclcpp std_msgs sensor_msgs geometry_msgs vision_msgs car_interfaces)
 
 
 install(TARGETS
@@ -70,6 +75,7 @@ install(TARGETS
   video_output
   imagenet
   detectnet
+  tracking
   
   DESTINATION lib/${PROJECT_NAME}
 )

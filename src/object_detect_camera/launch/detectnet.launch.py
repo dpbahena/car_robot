@@ -63,7 +63,7 @@ def generate_launch_description():
         'mean_pixel_value', default_value=TextSubstitution(text="0.0")
     )
     threshold_arg  = DeclareLaunchArgument(
-        'threshold', default_value=TextSubstitution(text="0.2")
+        'threshold', default_value=TextSubstitution(text="0.5")
     )
 
 
