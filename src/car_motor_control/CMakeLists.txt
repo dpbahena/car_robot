@@ -14,6 +14,7 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(car_interfaces REQUIRED PATHS ${car_interfaces} )
 find_package(JetsonGPIO REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -40,10 +41,12 @@ add_executable(carpose src/car_pose.cpp)
 add_executable(caracctionserver src/car_action_server.cpp)
 # add_executable(actionclient src/action_client.cpp)
 add_executable(pantilt src/pantilt.cpp 
-                src/pca9685SetUp.cpp 
+                src/utils/pca9685SetUp.cpp 
                 libraries/i2c_driver/i2c_driver.cpp 
                 libraries/pca9685/pca9685.cpp
 )
+# add_executable(joystickcarcontrol src/joystick_car_control.cpp)
+
 
 
 
@@ -89,6 +92,12 @@ ament_target_dependencies(pantilt
   "car_interfaces"
 )
 
+# ament_target_dependencies(joystickcarcontrol
+#   "rclcpp"
+#   "sensor_msgs"
+#   "geometry_msgs"
+# )
+
 
 
 
@@ -102,6 +111,7 @@ install(TARGETS
   caracctionserver
   # actionclient
   pantilt
+  # joystickcarcontrol
   
   DESTINATION lib/${PROJECT_NAME}
 )

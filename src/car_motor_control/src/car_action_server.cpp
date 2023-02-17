@@ -41,7 +41,7 @@ public:
         );
 
         /* Init Twist publisher */
-        velocity_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmds", 1);
+        velocity_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("vel_cmds", 10);
 
         /* Init subscriber to Pose topic */
         pose_sub_ = this->create_subscription<std_msgs::msg::Float32>("distance", 1, std::bind(&CarActionServer::distance_callback, this, _1));

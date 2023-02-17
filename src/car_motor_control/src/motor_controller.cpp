@@ -79,7 +79,7 @@ MotorController::MotorController(AdafruitMotorHAT *hat) : Node("motorcontroller_
 }
 
 void MotorController::init_subscribers(){
-    velocity_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("vel_cmds", 1, std::bind(&MotorController::velocity_callback, this, _1));
+    velocity_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("vel_cmds", 10, std::bind(&MotorController::velocity_callback, this, _1));
     rel_speeds_sub_ = this->create_subscription<std_msgs::msg::Float32MultiArray>("relative_speeds", 1, std::bind(&MotorController::relative_speeds_callback, this, _1));
 
 

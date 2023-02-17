@@ -1,4 +1,4 @@
-#include "../libraries/pca9685/pca9685.h"
+#include "../../libraries/pca9685/pca9685.h"
 
 
 class PCA9685SetUp {
@@ -21,5 +21,6 @@ private:
     void degrees_to_pulses(float degrees);
     void init_i2c_driver();
     void init_PCA9685_object();
+    
     void close_PCA9685_object();
 };
