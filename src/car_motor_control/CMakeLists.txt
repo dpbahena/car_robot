@@ -45,7 +45,7 @@ add_executable(pantilt src/pantilt.cpp
                 libraries/i2c_driver/i2c_driver.cpp 
                 libraries/pca9685/pca9685.cpp
 )
-# add_executable(joystickcarcontrol src/joystick_car_control.cpp)
+add_executable(joystickcarcontrol src/joystick_car_control.cpp)
 
 
 
@@ -92,11 +92,11 @@ ament_target_dependencies(pantilt
   "car_interfaces"
 )
 
-# ament_target_dependencies(joystickcarcontrol
-#   "rclcpp"
-#   "sensor_msgs"
-#   "geometry_msgs"
-# )
+ament_target_dependencies(joystickcarcontrol
+  "rclcpp"
+  "sensor_msgs"
+  "geometry_msgs"
+)
 
 
 
@@ -111,7 +111,7 @@ install(TARGETS
   caracctionserver
   # actionclient
   pantilt
-  # joystickcarcontrol
+  joystickcarcontrol
   
   DESTINATION lib/${PROJECT_NAME}
 )
