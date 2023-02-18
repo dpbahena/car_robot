@@ -4,6 +4,12 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import TextSubstitution
 from launch.substitutions import LaunchConfiguration
 
+#  Example
+#
+#  ros2 launch joy joy.launch.py
+# 
+
+
 def generate_launch_description():
     
     ld = LaunchDescription()
