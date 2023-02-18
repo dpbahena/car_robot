@@ -1,6 +1,7 @@
 #include "utils/pca9685SetUp.h"
 #include "rclcpp/rclcpp.hpp"
 #include "car_interfaces/msg/pantilt.hpp"
+//#include "geometry_msgs/msg/twist.hpp"
 
 
 /*
@@ -23,17 +24,26 @@ private:
     
     /* Get movement commands */
     rclcpp::Subscription<car_interfaces::msg::Pantilt>::SharedPtr pantilt_sub_;
+    
+    /* Get movements from a joystick through vel_cmds (Geometry_msgs/twist) */
+    //rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr joy_sub_;
+    
     rclcpp::TimerBase::SharedPtr timer_;
     
     /* max and min travel in degrees : pan-tilt values */
-    const int tilt_max = 110; //135;
+    const int tilt_max = 105; //135;
     const int tilt_min = 10;
-    const int pan_max = 145;
-    const int pan_min = 30;
+    const int pan_max = 150;
+    const int pan_min = 20;
+    const int pan_center = 83; 
+    const int tilt_center = 83;
 
     float pose_x{}, pose_y{};  // holds pantilt pose
     int degrees;
+    float x_comp, y_comp;   // used for joystick control
     void move_pantilt_callback(const car_interfaces::msg::Pantilt::ConstSharedPtr msg);
+    // void joy_callback(const geometry_msgs::msg::Twist::ConstSharedPtr msg);
+    // void joy_control();
     void update_pantilt_pose();
     void init_pantilt();
     void pan(int x);
@@ -52,12 +62,13 @@ int main(int argc, char **argv){
 PanTilt::PanTilt(): Node("pantilt_node"){
     /* init subscribers and publishers */
     pantilt_sub_ = this->create_subscription<car_interfaces::msg::Pantilt>("pantilt_cmds", 1, std::bind(&PanTilt::move_pantilt_callback, this, _1));
+    //joy_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("vel_cmds", 1, std::bind(&PanTilt::joy_callback, this, _1));
     pantilt_pub_ = this->create_publisher<car_interfaces::msg::Pantilt>("pantilt_pose", 1);
     timer_ = this->create_wall_timer(10ms, std::bind(&PanTilt::pose_callback, this));
-    pose_x = 90;
-    pose_y = 90;
-    servos_.moveServo(0, pose_x);  // center pan
-    servos_.moveServo(1, pose_y);  // center tilt
+    pose_x = pan_center;
+    pose_y = tilt_center;
+    servos_.moveServo(0, pose_x);  // center pan id:0
+    servos_.moveServo(1, pose_y);  // center tilt id:1
 
 }
 
@@ -84,6 +95,17 @@ void PanTilt::move_pantilt_callback(const car_interfaces::msg::Pantilt::ConstSha
     //servos_.moveServo(0,x);  // pan
     //servos_.moveServo(1,y);  // tilt
 }
+
+/* PanTilt movements using the joystick */
+// void PanTilt::joy_callback(const geometry_msgs::msg::Twist::ConstSharedPtr msg){
+    
+
+// }
+
+// void PanTilt::joy_control(){
+
+
+// }
 
 void PanTilt::pan(int x){
     rclcpp::Rate rate(60);

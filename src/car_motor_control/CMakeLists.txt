@@ -90,12 +90,14 @@ ament_target_dependencies(caracctionserver
 ament_target_dependencies(pantilt
   "rclcpp"
   "car_interfaces"
+  #"geometry_msgs"
 )
 
 ament_target_dependencies(joystickcarcontrol
   "rclcpp"
   "sensor_msgs"
   "geometry_msgs"
+  "car_interfaces"  # controls pantilt camera with joystick
 )
 
 
