@@ -9,16 +9,16 @@ def generate_launch_description():
     
     # args that can be set from the command line or a default will be used
     tolerance_arg = DeclareLaunchArgument(
-        "tolerance", default_value= TextSubstitution(text="6")
+        "tolerance", default_value= TextSubstitution(text="0.5")
     )
     kp_arg = DeclareLaunchArgument(
-        "kp", default_value= TextSubstitution(text="0.112")
+        "kp", default_value= TextSubstitution(text="0.048") ## was 0.112
     )
     ki_arg = DeclareLaunchArgument(
-        "ki", default_value= TextSubstitution(text="-0.0011")
+        "ki", default_value= TextSubstitution(text="-0.0035")  ## was 0.0011
     )
     kd_arg = DeclareLaunchArgument(
-        "kd", default_value= TextSubstitution(text="-0.0925")
+        "kd", default_value= TextSubstitution(text="0.0")  ## was -0.0925
     )
    
            

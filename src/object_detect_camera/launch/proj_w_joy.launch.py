@@ -13,8 +13,10 @@ from launch.substitutions import TextSubstitution
 ##################################333
 #
 #    ros2 launch machine_learning_pkg tracking.launch.py input:=/dev/video2 model_name:=ssd-mobilenet-v2 maxtime:=1
+#    NOTE: input:=/dev/video2   will be needed in case video changes from 2, or 3 or 4,  etc
 #
-#    ros2 launch object_detect_camera project.launch.py model_name:=coco-bottle maxtime:=1 threshold:=.6
+#    ros2 launch object_detect_camera project.launch.py model_name:=ssd-mobilenet-v2 maxtime:=1 threshold:=.6
+#
 #
 ############################33
 
@@ -46,11 +48,11 @@ def generate_launch_description():
     )
    
      # ! ------Launch tracking.launch.py------for tracking images----->
-    launch_tracking_node = IncludeLaunchDescription(
+    launch_joystick_control_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory('object_detect_camera'),
-                'launch/tracking.launch.py'
+                get_package_share_directory('car_motor_control'),
+                'launch/joy_car_robot.launch.py'
             )
             
         )
@@ -60,7 +62,7 @@ def generate_launch_description():
    
     ld.add_action(launch_detectnet)
     ld.add_action(launch_robot)
-    #ld.add_action(launch_tracking_node)
+    ld.add_action(launch_joystick_control_node)
     
     
    
