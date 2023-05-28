@@ -11,7 +11,7 @@
 
 /*  --------------------- COMMAND LINE --------------------
 *
-*            ros2 run car_control actionclient 2 1 0 0
+*            ros2 run car_motor_control actionclient 2 1 0 0
 *
 */
 
