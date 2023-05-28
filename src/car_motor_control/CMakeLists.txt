@@ -39,7 +39,7 @@ add_executable(relativespeeds src/relative_speeds.cpp)
 add_executable(motorencoder src/motor_encoder.cpp)
 add_executable(carpose src/car_pose.cpp)
 add_executable(caracctionserver src/car_action_server.cpp)
-# add_executable(actionclient src/action_client.cpp)
+add_executable(actionclient src/action_client.cpp)
 add_executable(pantilt src/pantilt.cpp 
                 src/utils/pca9685SetUp.cpp 
                 libraries/i2c_driver/i2c_driver.cpp 
@@ -82,11 +82,11 @@ ament_target_dependencies(caracctionserver
   "std_msgs"
   "rclcpp_action"
 )
-# ament_target_dependencies(actionclient
-#   "rclcpp"
-#   "rclcpp_action"
-#   "car_interfaces"
-# )
+ament_target_dependencies(actionclient
+  "rclcpp"
+  "rclcpp_action"
+  "car_interfaces"
+)
 ament_target_dependencies(pantilt
   "rclcpp"
   "car_interfaces"

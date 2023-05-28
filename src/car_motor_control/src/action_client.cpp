@@ -34,7 +34,8 @@ private:
 
     bool goal_done_;
     void send_goal();
-    void goal_response_callback(std::shared_future<GoalHandleCarmove::SharedPtr> future);
+    //void goal_response_callback(std::shared_future<GoalHandleCarmove::SharedPtr> future);
+    void goal_response_callback(/*const*/ GoalHandleCarmove::SharedPtr goal_handle);
     void feedback_callback(GoalHandleCarmove::SharedPtr, const std::shared_ptr<const Carmove::Feedback> feedback);
     void result_callback(const GoalHandleCarmove::WrappedResult &result);
 
@@ -121,7 +122,7 @@ void CarActionClient::send_goal(){
 }
 
 //void CarActionClient::goal_response_callback(std::shared_future<GoalHandleCarmove::SharedPtr> future){
-void CarActionClient::goal_response_callback(const GoalHandleCarmove::ConstSharedPtr & goal_handle){
+void CarActionClient::goal_response_callback(/*const*/ GoalHandleCarmove::SharedPtr goal_handle){
     //auto goal_handle = future.get();
     if(!goal_handle){
         RCLCPP_ERROR(get_logger(),"Goal was rejected by server");
