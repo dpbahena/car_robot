@@ -302,7 +302,7 @@ void DetectObjNet::init_parameters(){
 
     }else{
         // determine which built-in model was requested
-
+        
         detectNet::NetworkType model = detectNet::NetworkTypeFromStr(model_name_str.c_str());
         if( model == detectNet::CUSTOM){
             ROS_ERROR("invalid built-in pretrained model name '%s', defaulting to pednet", model_name_str.c_str());
@@ -311,7 +311,7 @@ void DetectObjNet::init_parameters(){
 
         // create network using the built-in model
         net = detectNet::Create(model, threshold);
-
+        //net = detectNet::Create(model_name_str.c_str());
     }
 
     if( !net ){

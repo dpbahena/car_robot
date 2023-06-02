@@ -7,6 +7,7 @@ endif()
 
 set(car_interfaces /home/ros2data/car_robot/install)
 # find dependencies
+#find_package(VPI 2.0)
 find_package(ament_cmake REQUIRED)
 find_package(jetson-utils REQUIRED)
 find_package(jetson-inference REQUIRED)

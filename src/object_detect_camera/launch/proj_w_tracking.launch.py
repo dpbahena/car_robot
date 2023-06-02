@@ -17,7 +17,9 @@ from launch.substitutions import TextSubstitution
 #
 #    ros2 launch object_detect_camera project.launch.py model_name:=coco-bottle maxtime:=1 threshold:=.6
 #
-#    ros2 launch object_detect_camera project.launch.py model_name:=ssd-mobilenet-v2 maxtime:=1 threshold:=.6
+#    model_name:=ssd-mobilenet-v2 maxtime:=1 threshold:=.6
+#
+#    ros2 launch object_detect_camera proj_w_tracking.launch.py model_name:=coco-bottle maxtime:=1 threshold:=.6 output:=rtp://10.0.0.253:8080 output_codec:=h264
 #
 #
 ############################

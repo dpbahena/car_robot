@@ -112,6 +112,7 @@ void FuenteVideo::open_video_source(){
     video_width = video_options.width;
     video_height = video_options.height;
     rtsp_latency = video_options.rtspLatency;
+    //rtsp_latency = video_options.latency;
 
     RCLCPP_INFO(this->get_logger(),"Opening video source: %s", resource_str.c_str());
 

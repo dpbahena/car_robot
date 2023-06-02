@@ -145,7 +145,7 @@ void ImageNet::load_network(){
         
         net = imageNet::Create(prototxt_path.c_str(), model_path.c_str(), NULL, class_labels_path.c_str(), input_blob.c_str(), output_blob.c_str());
     }else{
-        // determine whic built-in model was requested
+        // determine which built-in model was requested
         
         imageNet::NetworkType model = imageNet::NetworkTypeFromStr(model_name.c_str());
         if( model == imageNet::CUSTOM){
@@ -156,6 +156,7 @@ void ImageNet::load_network(){
         // Create network using the built-in model
         
         net = imageNet::Create(model);
+        //net = imageNet::Create(model_name.c_str());
     }
 
     if(!net){
