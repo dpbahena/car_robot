@@ -38,7 +38,7 @@ private:
     std::string flip_str;
     int video_width;
     int video_height;
-    int rtsp_latency;
+    int latency;
 
     void init_publisher();
     bool aquireFrame();
@@ -64,6 +64,10 @@ FuenteVideo::FuenteVideo(): Node(__node_name_){
     
     init_publisher();  
     
+    video_width = video_options.width;
+    video_height = video_options.height;
+    latency = video_options.latency;
+
     // Declare parameters
 
     this->declare_parameter("resource", resource_str);
@@ -73,7 +77,7 @@ FuenteVideo::FuenteVideo(): Node(__node_name_){
     this->declare_parameter("framerate", video_options.frameRate);
     this->declare_parameter("loop", video_options.loop);
     this->declare_parameter("flip", flip_str);
-    this->declare_parameter("rtsp_latency", rtsp_latency);
+    this->declare_parameter("latency", latency);
 
     // Retrive parameters
 
@@ -84,7 +88,7 @@ FuenteVideo::FuenteVideo(): Node(__node_name_){
     this->get_parameter("framerate", video_options.frameRate);
     this->get_parameter("loop", video_options.loop);
     this->get_parameter("flip", flip_str);
-    this->get_parameter("rtsp_latency", rtsp_latency);
+    this->get_parameter("latency", latency);
 
     if( resource_str.size() == 0){
         RCLCPP_ERROR(this->get_logger(),"resource parameter wasn't set - please set the node's resource parameter to the input device/filename/URL");
@@ -109,10 +113,13 @@ FuenteVideo::FuenteVideo(): Node(__node_name_){
 
 void FuenteVideo::open_video_source(){
 
-    video_width = video_options.width;
-    video_height = video_options.height;
-    rtsp_latency = video_options.rtspLatency;
-    //rtsp_latency = video_options.latency;
+    // video_width = video_options.width;
+    // video_height = video_options.height;
+    // rtsp_latency = video_options.rtspLatency;
+    video_options.width = video_width;
+    video_options.height = video_height;
+    video_options.latency = latency;
+    
 
     RCLCPP_INFO(this->get_logger(),"Opening video source: %s", resource_str.c_str());
 

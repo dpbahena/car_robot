@@ -11,8 +11,9 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import TextSubstitution
 #    -  usage :
 #
-#   ros2 launch object_detect_camera video_viewer.launch.py input:=/dev/video4 output:=rtp://192.168.0.247:8080  input_latency:=1000
-#
+#   ros2 launch object_detect_camera video_viewer.launch.py input:=/dev/video4 output:=rtp://192.168.0.247:8080  input_latency:=1000   (faster default is output_codec:=vp9 )
+#   or
+#   ros2 launch object_detect_camera video_viewer.launch.py input:=/dev/video4 output:=rtp://10.0.0.253:8080  input_latency:=1000 output_codec:=h264
 #   or use the defaults  and run only: (see video_output.launch.py and video_source.launch.py for defaults)
 #
 #   ros2 launch object_detect_camera video_viewer.launch.py
