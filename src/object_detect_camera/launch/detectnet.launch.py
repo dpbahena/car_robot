@@ -1,7 +1,7 @@
 import os
 from xml.etree.ElementInclude import default_loader
 
-from pyparsing import str_type
+#from pyparsing import str_type
 from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
@@ -15,6 +15,13 @@ from launch.substitutions import TextSubstitution
 #launch - example:
 #
 #  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2
+#
+#   ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2 output:=rtp://10.0.0.253:8080 output_codec:=h264
+#
+#   for rtp in h264 mode use: gst-launch-1.0 -v udpsrc port=8080  caps = "application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpbin ! rtph264depay ! decodebin ! queue ! autovideoconvert !  videorate ! xvimagesink sync=false
+#
+#   for rtp in vp9 mode use: gst-launch-1.0 -v udpsrc port=8080  caps = "application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)VP9, payload=(int)96" ! rtpbin ! rtpvp9depay ! decodebin ! queue ! autovideoconvert !  videorate ! xvimagesink sync=false
+
 #
 
 def generate_launch_description():
