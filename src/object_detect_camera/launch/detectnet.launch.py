@@ -15,6 +15,8 @@ from launch.substitutions import TextSubstitution
 #launch - example:
 #
 #  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2
+#  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2 output:=rtp://10.0.0.253:8080 output_codec:=h264
+#
 #
 
 def generate_launch_description():
@@ -57,7 +59,7 @@ def generate_launch_description():
         'output_bbox', default_value=TextSubstitution(text="")
     )
     overlay_flags_arg = DeclareLaunchArgument(
-        'overlay_flags', default_value=TextSubstitution(text="0")   # works only with "0" instead of "box, labels, conf" as suggested in the original code
+        'overlay_flags', default_value=TextSubstitution(text="box,labels,conf")   # works only with "0" instead of "box, labels, conf" as suggested in the original code
     )
     mean_pixel_value_arg = DeclareLaunchArgument(
         'mean_pixel_value', default_value=TextSubstitution(text="0.0")
@@ -83,7 +85,7 @@ def generate_launch_description():
         ],
         parameters=[{
             "model_name": LaunchConfiguration("model_name"),# LaunchConfiguration('model_name')},
-            "model_path": "",
+            "model_path": LaunchConfiguration('model_path'),
             "prototxt_path": "",
             "class_labels_path": "",
             "input_blob": "",
@@ -109,8 +111,8 @@ def generate_launch_description():
     # --- Run the video source first : video, live, or picture
     ld.add_action(launch_video_source)
     # --- Run the variables needed for Imagenet node -------->
-    #ld.add_action(model_path_arg)
-    #ld.add_action(model_name_arg)
+    ld.add_action(model_path_arg)
+    ld.add_action(model_name_arg)
     
     #ld.add_action(prototxt_path_arg)
     #ld.add_action(class_labels_path_arg)

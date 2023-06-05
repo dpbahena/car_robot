@@ -69,10 +69,12 @@ int main(int argc, char ** argv){
 }
 
 DetectObjNet::DetectObjNet() : Node(__node_name_){
+    
     init_publishers();
     init_publisher_status();
     init_subscribers();
     init_parameters();
+    RCLCPP_INFO(this->get_logger(),"AFTER PARAMETERS");
     create_class_labels();
 
     timer2_ = this->create_wall_timer(2s,std::bind(&DetectObjNet::detection_status_callback,this));
@@ -257,7 +259,8 @@ void DetectObjNet::init_parameters(){
     std::string input_blob = DETECTNET_DEFAULT_INPUT;
     std::string output_cvg = DETECTNET_DEFAULT_COVERAGE;
     std::string output_bbox = DETECTNET_DEFAULT_BBOX;
-    std::string overlay_str = "box,labels,conf";
+    //std::string overlay_str = "box,labels,conf";
+    std::string overlay_str;
 
     float mean_pixel = 0.0f;
 
@@ -275,12 +278,12 @@ void DetectObjNet::init_parameters(){
     this->declare_parameter("input_blob", input_blob);
     this->declare_parameter("output_cvg", output_cvg);
     this->declare_parameter("output_bbox", output_bbox);
-    this->declare_parameter("overlay_flags", overlay_flags);
+    this->declare_parameter("overlay_flags", overlay_str);
     this->declare_parameter("mean_pixel_value", mean_pixel);
     this->declare_parameter("threshold", threshold);
 
     // retrieve parameters
-
+    
     this->get_parameter("model_name", model_name);
     this->get_parameter("model_path", model_path);
     this->get_parameter("prototxt_path", prototxt_path);
@@ -288,29 +291,30 @@ void DetectObjNet::init_parameters(){
     this->get_parameter("input_blob", input_blob);
     this->get_parameter("output_cvg", output_cvg);
     this->get_parameter("output_bbox", output_bbox);
-    this->get_parameter("overlay_flags", overlay_flags);
+    this->get_parameter("overlay_flags", overlay_str);
     this->get_parameter("mean_pixel_value", mean_pixel);
     this->get_parameter("threshold", threshold);
+    RCLCPP_INFO(this->get_logger(),"this is the model: = %s", model_name.c_str());
 
     overlay_flags = detectNet::OverlayFlagsFromStr(overlay_str.c_str());
 
     // load object detection network
-
+    //RCLCPP_INFO(this->get_logger(),"PATH IS: %s and size: %ld", model_path.c_str(), model_path.size()); 
     if(model_path.size() > 0){
         // create network using custom model_paths
         net = detectNet::Create(prototxt_path.c_str(), model_path.c_str(), mean_pixel, class_labels_path.c_str(), threshold, input_blob.c_str(), output_cvg.c_str(), output_bbox.c_str());
-
+        //RCLCPP_INFO(this->get_logger(),"INSIDE PATH IS: %s", model_path.c_str()); 
     }else{
         // determine which built-in model was requested
         
-        // detectNet::NetworkType model = detectNet::NetworkTypeFromStr(model_name_str.c_str());
+        //detectNet::NetworkType model = detectNet::NetworkTypeFromStr(model_name_str.c_str());
         // if( model == detectNet::CUSTOM){
         //     ROS_ERROR("invalid built-in pretrained model name '%s', defaulting to pednet", model_name_str.c_str());
         //     model = detectNet::SSD_MOBILENET_V2;
         // }
-
+        RCLCPP_INFO(this->get_logger(),"IM INSIDE...");
         // create network using the built-in model
-        //net = detectNet::Create(model, threshold);
+        //net = detectNet::Create(model_name, threshold);
         net = detectNet::Create(model_name.c_str());
     }
 
