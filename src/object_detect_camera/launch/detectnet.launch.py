@@ -15,7 +15,7 @@ from launch.substitutions import TextSubstitution
 #launch - example:
 #
 #  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2
-#  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2 output:=rtp://10.0.0.253:8080 output_codec:=h264
+#  ros2 launch object_detect_camera detectnet.launch.py output_bitrate:=3000000  model_name:=ssd-mobilenet-v2 output:=rtp://10.0.0.253:8080 output_codec:=vp9
 #
 #
 

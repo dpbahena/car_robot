@@ -54,8 +54,8 @@ target_link_libraries(video_output ${catkin_LIBRARIES} jetson-inference)
 #target_link_libraries(imagenet ${catkin_LIBRARIES} jetson-inference)
 add_executable(detectnet src/detectnet.cpp ${common_src})
 target_link_libraries(detectnet ${catkin_LIBRARIES} jetson-inference)
-#add_executable(tracking src/tracking.cpp src/utils/pid.cpp ${common_src})
-#target_link_libraries(tracking ${catkin_LIBRARIES} jetson-inference)
+add_executable(tracking src/tracking.cpp src/utils/pid.cpp ${common_src})
+target_link_libraries(tracking ${catkin_LIBRARIES} jetson-inference)
 
 
 
@@ -63,7 +63,7 @@ ament_target_dependencies(video_source rclcpp std_msgs sensor_msgs vision_msgs)
 ament_target_dependencies(video_output rclcpp std_msgs sensor_msgs vision_msgs)
 #ament_target_dependencies(imagenet rclcpp std_msgs sensor_msgs vision_msgs)
 ament_target_dependencies(detectnet rclcpp std_msgs sensor_msgs vision_msgs)
-#ament_target_dependencies(tracking rclcpp std_msgs sensor_msgs geometry_msgs vision_msgs car_interfaces)
+ament_target_dependencies(tracking rclcpp std_msgs sensor_msgs geometry_msgs vision_msgs car_interfaces)
 
 
 install(TARGETS
@@ -71,7 +71,7 @@ install(TARGETS
   video_output
   #imagenet
   detectnet
-  #tracking
+  tracking
   
   DESTINATION lib/${PROJECT_NAME}
 )

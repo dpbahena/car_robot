@@ -42,7 +42,7 @@ private:
     
     bool is_object_detected;
     // parameters 
-    float tolerance;
+    float tolerance, accuracy, pan_rate, tilt_rate;   //pan and tilt rate is the speed multiplier in which the motor will move
     float kp, kd, ki, tkp, tkd, tki, pkp, pkd, pki;
     float tau;
     float pLimMinInt, pLimMaxInt, tLimMinInt, tLimMaxInt;  // integral min and max values
@@ -102,6 +102,14 @@ void TrackingImages::parameter_callback(){
 
     this->get_parameter("tminint",tLimMinInt);
     this->get_parameter("tmaxint",tLimMaxInt);
+
+    // confidence
+    this->get_parameter("accuracy", accuracy);
+
+    // pan - tilt speed multiplier
+    this-get_parameter("pan_rate", pan_rate);
+    this-get_parameter("tilt_rate", tilt_rate);
+
     
 }
 
@@ -134,6 +142,11 @@ TrackingImages::TrackingImages():Node(__node_name_){
 
     this->declare_parameter("tminint", -2.0);
     this->declare_parameter("tmaxint", 0.5);
+
+    this->declare_parameter("accuracy", 0.8);
+
+    this->declare_parameter("pan_rate", 1.0);
+    this->declare_parameter("tilt_rate", 1.0);
     
 
     // retrieve parameter every second if any
@@ -230,7 +243,7 @@ void TrackingImages::detect_callback(const vision_msgs::msg::Detection2DArray::C
         
         //ROS_INFO("id is %i and score is %f ", id, confidence);
 
-        if (id == BOTTLE && confidence > .80){
+        if (id == BOTTLE && confidence > .65){
             // get the center of the target 
 
             // FOR FOXY DISTRO:
@@ -294,8 +307,8 @@ void TrackingImages::detect_callback(const vision_msgs::msg::Detection2DArray::C
 
             //move_msg.angular.z = -pid.out;
             move_pub_->publish(move_msg); 
-            move_pantilt.x = out1 + pan;   // add or subtract degrees depending of the camera pan pose
-            move_pantilt.y = -out2 + tilt;
+            move_pantilt.x = out1 * pan_rate + pan;   // add or subtract degrees depending of the camera pan pose
+            move_pantilt.y = -out2 * tilt_rate + tilt;
             pantilt_move_pub_->publish(move_pantilt);
             //rate.sleep();
              
