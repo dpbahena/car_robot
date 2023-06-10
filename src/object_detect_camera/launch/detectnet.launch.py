@@ -44,7 +44,7 @@ def generate_launch_description():
         "model_path", default_value=TextSubstitution(text=str(""))
     )
     prototxt_path_arg = DeclareLaunchArgument(
-        'prototxt', default_value=TextSubstitution(text="")
+        'prototxt_path', default_value=TextSubstitution(text="")
     )
     class_labels_path_arg = DeclareLaunchArgument(
         'class_labels_path', default_value=TextSubstitution(text="")
@@ -86,10 +86,10 @@ def generate_launch_description():
         parameters=[{
             "model_name": LaunchConfiguration("model_name"),# LaunchConfiguration('model_name')},
             "model_path": LaunchConfiguration('model_path'),
-            "prototxt_path": "",
-            "class_labels_path": "",
-            "input_blob": "",
-            "output_cvg": "",
+            "prototxt_path": LaunchConfiguration('prototxt_path'),
+            "class_labels_path": LaunchConfiguration("class_labels_path"),
+            "input_blob": LaunchConfiguration("input_blob"),
+            "output_cvg": LaunchConfiguration("output_cvg") ,
             "output_bbox": "", #LaunchConfiguration('output_bbox')},
             "overlay_flags": LaunchConfiguration('overlay_flags'),
             "mean_pixel_value": LaunchConfiguration('mean_pixel_value'),
@@ -114,10 +114,10 @@ def generate_launch_description():
     ld.add_action(model_path_arg)
     ld.add_action(model_name_arg)
     
-    #ld.add_action(prototxt_path_arg)
-    #ld.add_action(class_labels_path_arg)
-    #ld.add_action(input_blob_arg)
-    #ld.add_action(output_cvg_arg)
+    ld.add_action(prototxt_path_arg)
+    ld.add_action(class_labels_path_arg)
+    ld.add_action(input_blob_arg)
+    ld.add_action(output_cvg_arg)
     #ld.add_action(output_bbox_arg)
     ld.add_action(overlay_flags_arg)
     ld.add_action(mean_pixel_value_arg)

@@ -76,7 +76,7 @@ DetectObjNet::DetectObjNet() : Node(__node_name_){
     init_parameters();
     RCLCPP_INFO(this->get_logger(),"AFTER PARAMETERS");
     create_class_labels();
-
+    RCLCPP_INFO(this->get_logger(),"AFTER CREATE_CLASS_LABELS");
     timer2_ = this->create_wall_timer(2s,std::bind(&DetectObjNet::detection_status_callback,this));
 
 }
@@ -299,10 +299,12 @@ void DetectObjNet::init_parameters(){
     overlay_flags = detectNet::OverlayFlagsFromStr(overlay_str.c_str());
 
     // load object detection network
-    //RCLCPP_INFO(this->get_logger(),"PATH IS: %s and size: %ld", model_path.c_str(), model_path.size()); 
+    RCLCPP_INFO(this->get_logger(),"PATH IS: %s and size: %ld", model_path.c_str(), model_path.size()); 
     if(model_path.size() > 0){
         // create network using custom model_paths
+        RCLCPP_INFO(this->get_logger(),"Custom Model, Class_labels_path: %s, input_blob: %s, output_cvg: %s", class_labels_path.c_str(), input_blob.c_str(), output_cvg.c_str());
         net = detectNet::Create(prototxt_path.c_str(), model_path.c_str(), mean_pixel, class_labels_path.c_str(), threshold, input_blob.c_str(), output_cvg.c_str(), output_bbox.c_str());
+        
         //RCLCPP_INFO(this->get_logger(),"INSIDE PATH IS: %s", model_path.c_str()); 
     }else{
         // determine which built-in model was requested
