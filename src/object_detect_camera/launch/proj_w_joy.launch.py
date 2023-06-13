@@ -17,6 +17,12 @@ from launch.substitutions import TextSubstitution
 #
 #    ros2 launch object_detect_camera project.launch.py model_name:=ssd-mobilenet-v2 maxtime:=1 threshold:=.6
 #
+#    h264 code:
+#
+#    gst-launch-1.0 -v udpsrc port=8080  caps = "application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpbin ! rtph264depay ! decodebin ! queue ! autovideoconvert !  videorate ! xvimagesink sync=false    
+#
+#    vp9 code :
+#    gst-launch-1.0 -v udpsrc port=8080  caps = "application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)VP9, payload=(int)96" ! rtpbin ! rtpvp9depay ! decodebin ! queue ! autovideoconvert !  videorate ! xvimagesink sync=false
 #
 ############################33
 

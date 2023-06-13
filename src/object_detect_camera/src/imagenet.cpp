@@ -137,6 +137,7 @@ void ImageNet::declare_set_parameters(){
     this->get_parameter("class_labels_path", class_labels_path);
     this->get_parameter("input_blob", input_blob);
     this->get_parameter("output_blob", output_blob);
+    
 }
 void ImageNet::load_network(){
     

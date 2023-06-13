@@ -25,7 +25,7 @@ def generate_launch_description():
     topic_launch_arg = DeclareLaunchArgument(
         "topic", default_value=""
     )
-
+    
     video_output = Node(
         package='object_detect_camera',           
         executable='video_output',

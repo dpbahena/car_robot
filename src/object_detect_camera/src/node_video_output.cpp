@@ -115,7 +115,7 @@ void SalidaVideo::init_parameters(){
 void SalidaVideo::init_subscribers(){
     image_sub_ = this->create_subscription<sensor_msgs::msg::Image>("image_in", 5, std::bind(&SalidaVideo::image_callback, this,_1) );
     topic_name = image_sub_->get_topic_name();
-    ROS_INFO("The topic name is %s", topic_name);
+    ROS_INFO("The topic name is %s", topic_name.c_str());
 }
 
 SalidaVideo::~SalidaVideo(){
