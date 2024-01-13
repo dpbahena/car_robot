@@ -307,16 +307,7 @@ void DetectObjNet::init_parameters(){
         
         //RCLCPP_INFO(this->get_logger(),"INSIDE PATH IS: %s", model_path.c_str()); 
     }else{
-        // determine which built-in model was requested
         
-        //detectNet::NetworkType model = detectNet::NetworkTypeFromStr(model_name_str.c_str());
-        // if( model == detectNet::CUSTOM){
-        //     ROS_ERROR("invalid built-in pretrained model name '%s', defaulting to pednet", model_name_str.c_str());
-        //     model = detectNet::SSD_MOBILENET_V2;
-        // }
-        RCLCPP_INFO(this->get_logger(),"IM INSIDE...");
-        // create network using the built-in model
-        //net = detectNet::Create(model_name, threshold);
         net = detectNet::Create(model_name.c_str());
     }
 

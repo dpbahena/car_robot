@@ -145,18 +145,11 @@ void ImageNet::load_network(){
         
         net = imageNet::Create(prototxt_path.c_str(), model_path.c_str(), NULL, class_labels_path.c_str(), input_blob.c_str(), output_blob.c_str());
     }else{
-        // determine which built-in model was requested
         
-        imageNet::NetworkType model = imageNet::NetworkTypeFromStr(model_name.c_str());
-        if( model == imageNet::CUSTOM){
-            ROS_ERROR("invalid built-in pretrained model name '%s', dafaulting to googlenet", model_name.c_str());
-            model = imageNet::GOOGLENET;
-        }
-
         // Create network using the built-in model
         
-        net = imageNet::Create(model);
-        //net = imageNet::Create(model_name.c_str());
+        net = imageNet::Create(model_name.c_str());
+        
     }
 
     if(!net){
